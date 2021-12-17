@@ -1,6 +1,16 @@
 import random
 import time
+import os
+import json
 
+def clear():
+    if os.name == 'nt':
+        _ = os.system('cls')
+    else:
+        _ = os.system('clear')
+    return
+
+#Utility Function for printing the word on the Screen
 def Initiate(word):
     length = len(word)
     print("\n")
@@ -9,43 +19,48 @@ def Initiate(word):
         length = length - 1
     print(end = '\n')
 
-    
+#Function to Play the HangMan game    
 def Hangman():
     print("Welcome to Hangman\n")
-    while(1==1):
+    while(True):
         print("Which Category would you like to play?\n")
         print("1)Sports\n2)Games\n3)Countries\n4)Exit\n")
         print("Enter the Number of the category you would like to play.")
         cat = input()
-        sports = ["football" , "basketball" , "cricket" , "baseball" , "badminton" , "tennis" , "hockey" , "volleyball" ]
-        games = ["valorant" , "witcher" , "minecraft" , "battlefield" , "halo" , "bioShock","paladins" , "tetris"]
-        countries = ["china" , "india" , "australia","switzerland","canada","japan","germany","australia",]
+        time.sleep(1)
+        with open("words\\Hangman.txt") as HG:
+            words = json.load(HG)
+        
+        clear()
         n = random.randint(0,7)
-        lives = 10
-        length = 0
-        guesses = ""
         if cat == "1":
             print("\nYou chose the category Sports.\n")
-            word = sports[n]
+            word = words["words"]["sports"][n]
+            print(word)
             Initiate(word)
         elif cat == "2":
             print("\nYou chose the category Video Games.\n")
-            word = games[n]
+            word = words["words"]["games"][n]
             Initiate(word)
         elif cat == "3":
             print("\nYou choose the category Countries.\n")
-            word = countries[n]
+            word = words["words"]["countries"][n]
             Initiate(word)
         elif cat == "4":
             print("\nClosing Application\n")
             time.sleep(1)
+            clear()
             break
         else:
             print("Please pick a number from 1-4")
+
+        #Prints and Playes the Game screen
+        lives = 10
+        length = 0
+        guesses = ""
         while lives>0:
             wrong = 0
-            liv = str(lives)
-            print("\nYou have "+liv+" lives left")
+            print(f"\nYou have {lives} lives left")
             print("\nGuess a Letter")
             guess = input().lower()
             print("\n")
@@ -54,16 +69,21 @@ def Hangman():
                 print("Wrong\n")
                 lives = lives - 1
                 if lives<1:
+                    clear()
                     print("You loose\n")
-                    print("The word was "+word+".\n")
+                    print(f"The word was {word}.\n")
                     print("Would you like to play again? (Y/N)")
                     yn = input().lower()
                     if yn == 'y':
+                        time.sleep(1)
+                        clear()
                         continue
                     elif yn == 'n':
                         print("Closing Application")
                         time.sleep(1)
+                        clear()
                         return
+            clear()
             for char in word:
                 if char in guesses:
                     print(char , end="")
@@ -71,19 +91,28 @@ def Hangman():
                     print("_ ", end="")
                     wrong = wrong + 1
             if wrong == 0:
-                print("\n\nYou won\n\nThe word was "+word+"\n")
+                print(f"\n\nYou won\n\nThe word was {word}\n")
                 time.sleep(1)
-                break
+                print("Would you like to play again?(Y/N)")
+                YN = input().lower()
+                if YN == 'y':
+                    clear()
+                    break
+                elif YN == 'n':
+                    clear()
+                    return
+                else:
+                    print("Please pick either Y(yes) or N(no)\n")
 
-
-def RokPapSci():
+#Function to Play the Rock, Paper, Scissors game.
+def RockPaperScissors():
     print("Welcome to Rock Paper Scissors.")
-    cho = ["blank","Rock","Paper","Scissors"]
+    cho = ["Rock","Paper","Scissors"]
     while (1==1):
         print("\n1)Rock\n2)Paper\n3)Scissors\n")
         print("Enter the number of the hand you would like to play\n")
         Pla = cho[int(input())]
-        Com = cho[random.randint(1,3)]
+        Com = cho[random.randint(0,2)]
         time.sleep(0.5)
         if(Pla == Com):
             print(Pla+" vs "+Com)
@@ -104,10 +133,12 @@ def RokPapSci():
         print("Would you like to play again? (Y/N)")
         yn = input().lower()
         if yn == 'y':
+            clear()
             continue
         elif yn == 'n':
             print("\nClosing Application")
             time.sleep(1)
+            clear()
             break
         else:
             print("Please type either (Y/N)")
@@ -116,198 +147,218 @@ def RokPapSci():
         time.sleep(1)
     return
 
-
+#Function to play the Scramble Game.
 def Scramble():
     print("Welcome to Scramble\n")
     while(1==1):
         print("What category would you like to play?\n")
         print("1)Games\n2)Movies\n3)Companies\n4)Super Heroes\n5)Back\n")
         cat = input()
-        games = ["witcher","battlefield","minecraft","valorant","snake","pokemon"]
-        movies = ["avengers","johnwick","frozen","paddington","avatar","zootopia"]
-        companies = ["apple","samsung","tesla","alphabet","walmart","amazon"]
-        SupHer = ["batman","superman","aquaman","spiderman","antman","ironman"]
+        with open("words\\Scramble.txt") as SC:
+            words = json.load(SC)
         word = ""
         if cat == "1":
-            word = " ".join(random.choices(games))
+            word = " ".join(random.choices(words["word"]["games"]))
             shuffle = random.sample(word,len(word))
             shuffle = " ".join(shuffle)                                   
         elif cat == "2":
-            word = " ".join(random.choices(movies))
+            word = " ".join(random.choices(words["word"]["movies"]))
             shuffle = random.sample(word,len(word))
             shuffle = " ".join(shuffle)           
         elif cat == "3":
-            word = " ".join(random.choices(companies))
+            word = " ".join(random.choices(words["word"]["companies"]))
             shuffle = random.sample(word,len(word))
             shuffle = " ".join(shuffle)           
         elif cat == "4":
-            word = " ".join(random.choices(SupHer))
+            word = " ".join(random.choices(words["word"]["superhero"]))
             shuffle = random.sample(word,len(word))
             shuffle = " ".join(shuffle)            
         elif cat == "5":
             print("Closing Application")
             time.sleep(1)
-            break
+            clear()
+            return
         else:
             print("Choose a number between 1-4")
-        print("You need to unscramble "+shuffle)
-        time.sleep(0.7)
-        n = 3
-        lives = ""
-        while 1 == 1:
+        
+        #Prints the Scramble Game Screen
+        lives = 3
+        while lives>0:
+            print(f"You need to unscramble {shuffle}")
             print("\nYou think the word is : ")
             guess = input().lower()
             if guess == word:
                 print("\nThat is the word")
-                time.sleep(0.7)
                 print("\nYou Win")
                 time.sleep(0.5)
                 print("\nWould you like to play again? (Y/N)")
                 yn = input().lower()
                 if yn == 'y':
                     time.sleep(0.9)
+                    clear()
                     break
                 elif yn == 'n':
                     print("\nReturning")
                     time.sleep(1)
+                    clear()
                     return             
             else:
                 print("\nWrong")
                 print("\nTry again")
-                time.sleep(0.7)
-                n -= 1
-                lives = str(n)
-                print("\nYou have "+lives+" lives left")
-                if n == 0:
+                lives = lives - 1
+                clear()
+                print(f"\nYou have {lives} lives left")
+                if lives == 0:
                     print("\nYou loose")
                     print("\nThe Word was "+word)
                     print("\nWould you like to play again? (Y/N)")
                     yn = input().lower()
                     if yn == 'y':
                         time.sleep(0.9)
+                        clear()
                         break
                     elif yn == 'n':
                         print("\nReturning")
                         time.sleep(0.7)
+                        clear()
                         return
 
 
+#Utility function to print the cards in hand
+def printCards(cards):
+    category = ['♣','♦','♥','♠']
+    random_category = category[random.randint(0,3)]
+    for card in cards:
+        print(f"{card} {random_category} ,",end='')
+    return
+
+
+#Function to play the game BlackJack
 def BlackJack():
     print("Welcome to BlackJack")
-    player = []
-    computer = []
     cards = [1,2,3,4,5,6,7,8,9,10]
-    category = ['♣','♦','♥','♠']
-    player_sum = 0
-    computer_sum = 0
-    player_Choice = ''
-    cat_n = 0
-    cat_print = ''
     while (1==1):
+        player = []
+        computer = []
+        player_sum = 0
+        computer_sum = 0
         n = 0
-        print("\nWould you like to play BlackJack? (Y/N)")
-        yn = input().lower()
-        if yn == 'n':
-            print("\nReturning")
-            time.sleep(1)
-            return
         while (1==1):
             random_card = cards[random.randint(0,9)]
-            random_category = random.randint(0,3)
             player.append(random_card)
             random_card = cards[random.randint(0,9)]
             computer.append(random_card)
-            cat_n = random.randint(0,3)
-            cat_print = category[cat_n]
             player_sum = sum(player)
             computer_sum = sum(computer)
             print("\nYou have the Cards")
-            print(*player)
+            printCards(player)
             print("\nYour Total is = "+str(player_sum))
             if player_sum > 21:
                 print("\nYou loose")
                 print("\nThe Computer had ")
-                print(*computer)
-                print("\nSum = "+str(computer_sum))
+                printCards(computer)
+                print(f"\nSum = {computer_sum}")
                 break
             print("\nThe Computer has")
-            print(str(computer[0])+category[random.randint(0,3)]+",?...")
+            printCards(computer)
             print("\nWould you like to \n1)Hit\n2)Stand")
-            player_Choice = str(input())
-            if player_Choice == '1':
-                if computer_sum == 21:
-                    print("\nYou loose")
-                    print("\nThe Computer had ")
-                    print(*computer)
-                    print("\nSum = "+str(computer_sum))
-                    break
-                elif computer_sum > 21:
+            player_Choice = input().lower()
+            if player_Choice == '1' or player_Choice == 'hit':
+                if computer_sum > 21:
                     print("\nYou Win")
                     print("\nThe Computer had ")
-                    print(*computer)
-                    print("\nSum = "+str(computer_sum))
+                    printCards(computer)
+                    print(f"\nSum = {computer_sum}")
                     break
+                clear()
                 continue
             elif player_Choice == '2':
                 if player_sum<=21 and player_sum>computer_sum:
                     print("\nYou Win")
                     print("\nThe Computer had ")
-                    print(*computer)
-                    print("\nSum = "+str(computer_sum))
+                    printCards(computer)
+                    print(f"\nSum = {computer_sum}")
+                    break
+                elif player_sum == 21 and computer_sum == 21:
+                    print("\n Its a Draw")
+                    print("You had :")
+                    printCards(player)
+                    print("\nThe Computer had :")
+                    printCards(computer)
+                    break
+                elif computer_sum > 21:
+                    print("\nYou Win")
+                    print("\nThe Computer had ")
+                    printCards(computer)
+                    print(f"\nSum = {computer_sum}")
                     break
                 else:
                     print("\nYou Loose")
                     print("\nThe Computer had ")
-                    print(*computer)
-                    print("\nSum = "+str(computer_sum))
-                    break   
+                    printCards(computer)
+                    print(f"\nSum = {computer_sum}")
+                    break
+        print("Would you like to play again?")
+        yn = input().lower()
+        if yn == 'y':
+            clear()
+            continue
+        elif yn == 'n':
+            clear()
+            return
+
         
-        
+#Function to roll a die     
 def Roll():
     print("\nWelcome to Roll The Dice")
     while(1==1):
-        print("\nWould you like to Roll The Dice (Y/N)")
-        yn = input().lower()
-        if yn == "y":
-            print("\nRolling the Dice")
-            dice = 0
-            dice = random.randint(1,6)
-            dice = str(dice)
-            time.sleep(2)
-            print("\nThe Dice says "+dice)
-            time.sleep(1)
-            continue
-        elif(yn == "n"):
-            print("\nClosing the Program")
-            time.sleep(1)
-            break
-            return
+        print("\nRolling the Dice")
+        dice = random.randint(1,6)
+        time.sleep(2)
+        print(f"\nThe Dice says {dice}")
+        while(True):
+            print("\nWould you like to roll again?")
+            print("1) Yes\n2) No")
+            yn = input().lower()
+            if yn == '1':
+                clear()
+                break
+            elif yn == '2':
+                clear()
+                return
+            else:
+                print("Pick a number from 1(Yes) and 2(No)")
+                time.sleep(1)
+                clear()
+                continue
 
 
+#Function to Flip a Coin
 def Flip():
     print("\nWelcome to Flip a Coin")
     while(1==1):
-        print("\nWould you like to Flip a Coin (Y/N)")
-        yn = input().lower()
-        if yn == "y":
-            print("\nFlipping a Coin")
-            coin = random.randint(0,1)
-            coin = str(coin)
-            time.sleep(2)
-            if coin == "0":
-                print("\nThe Coin says Heads")
-                time.sleep(1)
-                continue
-            else:
-                print("\nThe Coin says Tails")
-                time.sleep(1)
-                continue
-        elif yn == "n":
-            print("\nClosing the Program")
-            time.sleep(1)
-            return
+        print("\nFlipping a Coin")
+        coin = random.randint(0,1)
+        time.sleep(1)
+        if coin == 0:
+            print("The coin landed on HEADS")
         else:
-            print("Please type either (Y/N)")
+            print("The coin landed on TAILS")
+        while(True):
+            print("\nWould you like to Flip again?")
+            print("1) Yes\n2) No")
+            yn = input().lower()
+            if yn == '1':
+                clear()
+                break
+            elif yn == '2':
+                clear()
+                return
+            else:
+                print("Pick either 1(YES) or 2(NO)")
+                time.sleep(0.5)
+                clear()
+                continue
 
 
 def Calculator():
@@ -367,20 +418,21 @@ def StopWatch():
         input()
         print("\nStarting StopWatch")
         start = time.time()
-        time.sleep(1)
         print("\nPress Enter to Stop")
         input()
         print("\nStopping StopWatch\n")
         pause = time.time()
         time_spent = pause - start
         Converter(time_spent)
-        print("\nWould you like to try again? (Y/N)")
+        print("\nWould you like to time again? (Y/N)")
         yn = input().lower()
         if yn == 'y':
+            clear()
             continue
         elif yn == 'n':
             print("\nClosing Application")
             time.sleep(1)
+            clear()
             break
         return
 
@@ -506,25 +558,32 @@ def Arcade():
         if achoice == '1':
             print("\nLaunching Hangman\n")
             time.sleep(1)
+            clear()
             Hangman()
         elif achoice == '2':
             print("\nLaunching Rock Paper Scissors\n")
             time.sleep(1)
-            RokPapSci()
+            clear()
+            RockPaperScissors()
         elif achoice == '3':
             print("\nLaunching Scramble\n")
             time.sleep(1)
+            clear()
             Scramble()
         elif achoice == '4':
             print("\nLaunching BlackJack\n")
             time.sleep(1)
+            clear()
             BlackJack()
         elif achoice == '5':
             print("Exiting Application\n")
             time.sleep(1)
+            clear()
             return
         else:
-            print("Choose between 1-4")
+            print("Choose between 1-5")
+            time.sleep(1)
+            clear()
 
 
 def Tools():
@@ -535,51 +594,58 @@ def Tools():
         if bchoice == '1':
             print("\nLaunching Roll The Dice")
             time.sleep(1)
+            clear()
             Roll()
         elif bchoice == '2':
             print("\nLaunching Flip a Coin")
             time.sleep(1)
+            clear()
             Flip()
         elif bchoice == '3':
             print("\nLaunching Calculator")
             time.sleep(1)
+            clear()
             Calculator()
         elif bchoice == '4':
             print("\nLaunching Stop Watch")
             time.sleep(1)
+            clear()
             StopWatch()
         elif bchoice == '5':
             print("\nLaunching Timer")
             time.sleep(1)
+            clear()
             Timer()
         elif bchoice == '6':
+            clear()
             return            
         else:
-            print("Choose between 1-5")
-
+            print("Choose between 1-6")
+            time.sleep(1)
+            clear()
 
 #main
-print("\nHello\n")
-print("Launching Omni-Tool\n")
-time.sleep(0.5)
-while(1==1):
-    print("What would you like to access")
-    print("\n1)Arcade \n2)Tools \n3)Valorant Character Guide \n4)Exit\n")
-    print("Enter the number you want to access.")
-    choice = input()
-    if choice == '1':
-        print("\nLaunching Arcade\n")
-        time.sleep(1)
-        Arcade()
-    elif choice == '2':
-        print("\nLaunching Tools\n")
-        time.sleep(1)
-        Tools()
-    elif choice == '3':
-        print("\nLaunching Valorant Character Guide\n")
-        time.sleep(1)
-        Vguide()
-    elif choice == '4':
-        print('\nShutting Down\n')
-        time.sleep(1)
-        exit()
+if __name__ == "__main__":    
+    print("\nHello\n")
+    print("Launching Omni-Tool\n")
+    while(1==1):
+        print("What would you like to access")
+        print("\n1)Arcade \n2)Tools \n3)Valorant Character Guide \n4)Exit\n")
+        print("Enter the number you want to access.")
+        choice = input()
+        if choice == '1':
+            print("\nLaunching Arcade\n")
+            clear()
+            Arcade()
+        elif choice == '2':
+            print("\nLaunching Tools\n")
+            clear()
+            Tools()
+        elif choice == '3':
+            print("\nLaunching Valorant Character Guide\n")
+            clear()
+            Vguide()
+        elif choice == '4':
+            print('\nShutting Down\n')
+            clear()
+            exit()

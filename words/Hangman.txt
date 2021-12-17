@@ -1,0 +1,7 @@
+{
+	"words": {
+		"sports": ["football", "basketball", "cricket", "baseball", "badminton", "tennis", "hockey", "volleyball"],
+		"games": ["valorant", "witcher", "minecraft", "battlefield", "halo", "bioShock", "paladins", "tetris"],
+		"countries": ["china", "india", "australia", "switzerland", "canada", "japan", "germany", "australia"]
+	}
+}

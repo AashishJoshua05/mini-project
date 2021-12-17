@@ -1,0 +1,8 @@
+{
+	"word": {
+		"games": ["witcher", "battlefield", "minecraft", "valorant", "snake", "pokemon"],
+		"movies": ["avengers", "johnwick", "frozen", "paddington", "avatar", "zootopia"],
+		"companies": ["apple", "samsung", "tesla", "alphabet", "walmart", "amazon"],
+		"superhero": ["batman", "superman", "aquaman", "spiderman", "antman", "ironman"]
+	}
+}
